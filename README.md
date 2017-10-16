@@ -1,5 +1,5 @@
 # GraphNodeJS
-Graph Traversal on top of rdflib.js
+Graph Traversal on top of [rdflib.js](https://github.com/linkeddata/rdflib.js)
 
 ## API
 

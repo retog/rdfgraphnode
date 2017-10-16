@@ -1,6 +1,4 @@
 /**
- * A GraphNode.internalSpot: a node that maybe doesn't exist and a promise for the nodes that exist.
- * 
  * Node Status:
  * 
  * Locally undetermined: There are multiple local nodes satisfying the criteria specified for this object 

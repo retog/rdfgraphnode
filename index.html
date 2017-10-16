@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Traversal API for the Giant Global Graph">
+    <meta name="author" content="Reto Gmür"> 
+    <title>GraphNodeJS</title>
+    
+</head>
+
+<body>
+    <h1>GraphNodeJS</h1>
+    <p>Content of Script-Tag:</p>
+    <pre id="script-viewer"></pre>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!-- <script src="https://solid.github.io/releases/rdflib.js/rdflib-0.16.2.min.js"></script> -->
+    <script src="js/rdflib.min.js"></script>
+    <script src="js/main.js"></script>
+    <script id="script">
+        function foaf(suffix) {
+            return $rdf.sym("http://xmlns.com/foaf/0.1/"+suffix);
+        }
+        function schema(suffix) {
+            return $rdf.sym("http://schema.org/"+suffix);
+        }
+        function rdf(suffix) {
+            return $rdf.sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#"+suffix);
+        }
+        function dbo(suffix) {
+            return $rdf.sym("http://dbpedia.org/ontology/"+suffix);
+        }
+        function dbp(suffix) {
+            return $rdf.sym("http://dbpedia.org/property/"+suffix);
+        }
+        $(function () {
+            $("#script-viewer").html($("#script").html());
+            
+            GraphNode($rdf.sym("http://dbpedia.org/resource/Bern")).fetch().then(bern => {
+                console.log(bern.out(dbp("municipalityName")).value);
+                bern.out(dbo("neighboringMunicipality")).each(neighbour => {
+                    neighbour.fetch().then(neighbour =>  {
+                        console.log("\tNeighborinMunicipality:" + neighbour.out(dbp("municipalityName")).value);
+                        neighbour.out(dbo("neighboringMunicipality")).each(node => {
+                            console.log("\t\t"+neighbour.out(dbp("municipalityName")).value+"'s NeighborinMunicipality:" + node.value);
+                        });
+                    });
+                });
+                bern.in(dbo("birthPlace")).each(person => {
+                   person.fetch().then(person => {
+                      console.log("Person born in Bern: "+person.out(foaf("name")).value); 
+                   });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

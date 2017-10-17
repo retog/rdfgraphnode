@@ -39,12 +39,10 @@
             
             GraphNode($rdf.sym("http://dbpedia.org/resource/Bern")).fetch().then(bern => {
                 console.log(bern.out(dbp("municipalityName")).value);
-                bern.out(dbo("neighboringMunicipality")).each(neighbour => {
-                    neighbour.fetch().then(neighbour =>  {
-                        console.log("\tNeighborinMunicipality:" + neighbour.out(dbp("municipalityName")).value);
-                        neighbour.out(dbo("neighboringMunicipality")).each(node => {
-                            console.log("\t\t"+neighbour.out(dbp("municipalityName")).value+"'s NeighborinMunicipality:" + node.value);
-                        });
+                bern.out(dbo("neighboringMunicipality")).fetchEach(neighbour => {
+                    console.log("\tNeighborinMunicipality:" + neighbour.out(dbp("municipalityName")).value);
+                    neighbour.out(dbo("neighboringMunicipality")).each(node => {
+                        console.log("\t\t"+neighbour.out(dbp("municipalityName")).value+"'s NeighborinMunicipality:" + node.value);
                     });
                 });
                 bern.in(dbo("birthPlace")).each(person => {

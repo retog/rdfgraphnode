@@ -63,6 +63,10 @@ GraphNode.Impl = class {
             this.nodes.forEach(node => f(GraphNode([node], this.graph, this.sources)));
         }
         
+        fetchEach(f) {
+            this.nodes.forEach(node => GraphNode([node], this.graph, this.sources).fetch().then(f));
+        }
+        
         out(predicate) {
             var nodes = this.graph.each(this.node, predicate);
             if (nodes.length === 0) {

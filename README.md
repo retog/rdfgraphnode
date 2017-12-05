@@ -3,7 +3,7 @@ Graph Traversal on top of [rdflib.js](https://github.com/linkeddata/rdflib.js)
 
 ## API
 
-A GraphNode represents one or several nodes in a graph. 
+A GraphNode represents an arbitrary number of nodes in a graph. 
 
 A GraphNode has the following properties:
 

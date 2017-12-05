@@ -76,17 +76,17 @@ GraphNode.Impl = class {
         
         out(predicate) {
             var nodes = this.graph.each(this.node, predicate);
-            if (nodes.length === 0) {
+            /*if (nodes.length === 0) {
                 throw "No property "+predicate+" on "+this.node;
-            }
+            }*/
             return GraphNode(nodes, this.graph, this.sources);
         }
         
         in(predicate) {
             var statements = this.graph.statementsMatching(undefined, predicate, this.node);
-            if (statements.length === 0) {
+            /*if (statements.length === 0) {
                 throw "No property "+predicate+" pointing to "+this.node;
-            }
+            }*/
             return GraphNode(statements.map(statement => statement.subject), this.graph, this.sources);
         }
     }

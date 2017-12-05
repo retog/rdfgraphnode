@@ -13,7 +13,7 @@ A GraphNode has the following properties:
 - nodes
 - graph
 
-The first three properties are available only if the GraphNode represeents 
+The first three properties are available only if the GraphNode represents 
 exactly one node.
 
 A GraphNode has the following methods:

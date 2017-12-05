@@ -17,9 +17,9 @@ GraphNode.Impl = class {
             this._graph = graph;
             if (Array.isArray(nodes)) {
                 this.nodes = nodes;
-                if (this.nodes.length === 0) {
+                /*if (this.nodes.length === 0) {
                     throw "Can't represent empty set of nodes";
-                }
+                }*/
             } else {
                 this.nodes = [nodes];
             }

@@ -7,6 +7,10 @@
  * 
  * @type type
  */
+if (typeof $rdf === 'undefined') {
+    $rdf = require("rdflib");
+}
+
 function GraphNode() {
     return new GraphNode.Impl(...arguments);
 }
@@ -126,3 +130,5 @@ GraphNode.rdfFetch = function(uri, options, login) {
         });
     });
 };
+
+module.exports = GraphNode;

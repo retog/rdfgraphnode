@@ -32,14 +32,14 @@ GraphNode.Impl = class {
         
         get graph() {
             if (!this._graph) {
-                throw "Operation not possible as no Graph is available, try fetching first";
+                throw Error("Operation not possible as no Graph is available, try fetching first");
             }
             return this._graph;
         }
         
         get node() {
             if (this.nodes.length !== 1) {
-                throw "Operation not possible as this GraphNode is underdetermined";
+                throw Error("Operation not possible as this GraphNode is underdetermined");
             }
             return this.nodes[0];
         }

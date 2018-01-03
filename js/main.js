@@ -131,4 +131,6 @@ GraphNode.rdfFetch = function(uri, options, login) {
     });
 };
 
-module.exports = GraphNode;
+if (typeof module !== 'undefined') {
+    module.exports = GraphNode;
+}

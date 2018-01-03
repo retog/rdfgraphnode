@@ -1,6 +1,6 @@
 {
   "name": "rdfgraphnode",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Graph Traversal on top of rdflib.js",
   "main": "distribution/main.js",
   "repository": "git@github.com:retog/GraphNodeJS.git",

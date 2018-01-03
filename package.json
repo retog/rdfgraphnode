@@ -1,6 +1,6 @@
 {
   "name": "rdfgraphnode",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Graph Traversal on top of rdflib.js",
   "main": "js/main.js",
   "repository": "git@github.com:retog/GraphNodeJS.git",
@@ -13,7 +13,7 @@
     "build": "babel js --presets babel-preset-es2015 --out-dir distribution"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "babel-cli": "^6.26.0"
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1"
   }
 }

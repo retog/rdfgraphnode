@@ -66,7 +66,7 @@ GraphNode.Impl = class {
         /*
          * 
          * @param {type} f
-         * @returns {unresolved} a promise thta is satisfied whne all promises returned by f are resolved
+         * @returns {unresolved} a promise that is satisfied when all promises returned by f are resolved
          */
         each(f) {
             var results = this.nodes.map(node => f(GraphNode([node], this.graph, this.sources)));
@@ -76,6 +76,13 @@ GraphNode.Impl = class {
         fetchEach(f) {
             var results = this.nodes.map(node => GraphNode([node], this.graph, this.sources).fetch().then(f));
             return Promise.all(results);
+        }
+
+        /**
+         * Returns a GraphNode for each node represented by this GraphNode
+         */
+        split() {
+            return this.nodes.map(node => GraphNode([node], this.graph, this.sources));
         }
         
         out(predicate) {

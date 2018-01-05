@@ -56,7 +56,7 @@ GraphNode.Impl = function () {
         /*
          * 
          * @param {type} f
-         * @returns {unresolved} a promise thta is satisfied whne all promises returned by f are resolved
+         * @returns {unresolved} a promise that is satisfied when all promises returned by f are resolved
          */
 
     }, {
@@ -78,6 +78,20 @@ GraphNode.Impl = function () {
                 return GraphNode([node], _this3.graph, _this3.sources).fetch().then(f);
             });
             return Promise.all(results);
+        }
+
+        /**
+         * Returns a GraphNode for each node represented by this GraphNode
+         */
+
+    }, {
+        key: "split",
+        value: function split() {
+            var _this4 = this;
+
+            return this.nodes.map(function (node) {
+                return GraphNode([node], _this4.graph, _this4.sources);
+            });
         }
     }, {
         key: "out",

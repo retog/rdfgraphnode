@@ -8,7 +8,7 @@
  * @type type
  */
 if (typeof $rdf === 'undefined') {
-    $rdf = require("rdflib");
+    var $rdf = require("rdflib");
 }
 
 function GraphNode() {

@@ -1,0 +1,2 @@
+@prefix dc: <http://dublincore.org/2012/06/14/dcelements#>.
+<> dc:title "Another example".

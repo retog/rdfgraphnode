@@ -11,6 +11,10 @@ if (typeof $rdf === 'undefined') {
     var $rdf = require("rdflib");
 }
 
+if (typeof fetch === 'undefined') {
+    var fetch = require("node-fetch");
+}
+
 function GraphNode() {
     return new GraphNode.Impl(...arguments);
 }
@@ -114,15 +118,25 @@ GraphNode.Impl = class {
  * @return {Promise<Response>} Response has a `graph`property with the rertived graph
  */
 GraphNode.rdfFetch = function(uri, options, login) {
+    function plainFetch(uri, init = {}) {
+        return fetch(uri, init).then(response => {
+            if (response.ok) {
+                let graph = $rdf.graph();
+                let mediaType = response.headers.get("Content-type");
+                return response.text().then(text => {
+                    $rdf.parse(text, graph, uri, mediaType);
+                    response.graph = graph;
+                    return response;
+                });
+            } else {
+                return response;
+            }
+        });
+    };
     var ggg = this;
     return new Promise(function (resolve, reject) {
-        var graph = $rdf.graph();
-        var fetcher = new $rdf.Fetcher(graph, options);
-        fetcher.fetch(uri, {
-            "redirect": "follow"
-        }).then(function (response) {
+        plainFetch(uri, options).then(function (response) {
             if (response.status < 300) {
-                response.graph = graph;
                 resolve(response);
             } else {
                 if (login && (response.status === 401)) {

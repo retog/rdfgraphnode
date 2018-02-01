@@ -26,17 +26,14 @@ describe('GraphNode', function () {
         var express = require('express');
         var app = express();
         var server = null;
+        var http = require('http');
 
         before(function(done) {  
             var path = require('path');
-            //var logger = require('morgan');
             app.set('port', process.env.PORT || 3123);
-            server = app.listen(app.get('port'),
-            function(){
-                console.log("Express server listening on port " + app.get('port'));
-                //app.use(logger('dev'));
-                app.use(express.static(path.join(__dirname, './served')));
-            });
+            app.use(express.static(path.join(__dirname, './served')));
+            server = http.createServer(app);
+            server.listen(app.get('port'));
             done();
         });
         it('Fetching', function (done) {
@@ -48,7 +45,6 @@ describe('GraphNode', function () {
                 }).then(done);
         });
         after(function(done) {
-            console.log("closing server");;
             server.close();
             done();
         });

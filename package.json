@@ -7,6 +7,7 @@
   "author": "Reto Gmür <reto@factsmission.com>",
   "license": "MIT",
   "dependencies": {
+    "node-fetch": "^1.7.3",
     "rdflib": "^0.16.5"
   },
   "scripts": {
@@ -17,6 +18,8 @@
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "express": "^4.16.2",
+    "fetch": "^1.1.0",
+    "http": "^0.0.0",
     "mocha": "^5.0.0"
   }
 }

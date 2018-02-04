@@ -1126,10 +1126,6 @@ http-errors@1.6.2, http-errors@~1.6.2:
     setprototypeof "1.0.3"
     statuses ">= 1.3.1 < 2"
 
-http-shutdown@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/http-shutdown/-/http-shutdown-1.2.0.tgz#df2d8067a8856e99d11e9dceb21609591e1df514"
-
 http-signature@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.1.1.tgz#df72e267066cd0ac67fb76adf8e134a8fbcf91bf"
@@ -1640,9 +1636,8 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-rdflib@^0.16.5:
+rdflib@../rdflib.js:
   version "0.16.5"
-  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-0.16.5.tgz#f9e8eb40d1def8806df5812eb7e43d2ffeb3b885"
   dependencies:
     async "^0.9.x"
     jsonld "^0.4.5"
@@ -1895,10 +1890,6 @@ sshpk@^1.7.0:
 statuses@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
-
-stoppable@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/stoppable/-/stoppable-1.0.5.tgz#96917d198fa21918cfc17475a3a1536190ee7aed"
 
 string-width@^1.0.1, string-width@^1.0.2:
   version "1.0.2"

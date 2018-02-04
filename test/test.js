@@ -27,17 +27,28 @@ describe('GraphNode', function () {
         var app = express();
         var server = null;
         var http = require('http');
+        express.static.mime.define({'application/n-triples': ['nt']});
 
         before(function(done) {  
             var path = require('path');
             app.set('port', process.env.PORT || 3123);
             app.use(express.static(path.join(__dirname, './served')));
-            server = http.createServer(app);
+            server = http.createServer((request, reponse) => {
+                return app(request, reponse);
+            });
             server.listen(app.get('port'));
             done();
         });
-        it('Fetching', function (done) {
+        it('Fetching turtle', function (done) {
             let gn = GraphNode(rdf.sym("http://localhost:"+app.get('port')+"/example.ttl"));
+            gn.fetch().then(gn => 
+                {
+                    let title = gn.out(dc("title")).value;
+                    assert.equal("Another example", title);
+                }).then(done);
+        });
+        it('Fetching n-triples', function (done) {
+            let gn = GraphNode(rdf.sym("http://localhost:"+app.get('port')+"/example.nt"));
             gn.fetch().then(gn => 
                 {
                     let title = gn.out(dc("title")).value;

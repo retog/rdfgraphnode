@@ -7,13 +7,11 @@
  * 
  * @type type
  */
-if (typeof $rdf === 'undefined') {
+if (typeof require !== "undefined") {
     var $rdf = require("rdflib");
-}
-
-if (typeof fetch === 'undefined') {
     var fetch = require("node-fetch");
 }
+let Headers = ((h) => h ? h : window.Headers)(fetch.Headers);
 
 function GraphNode() {
     return new GraphNode.Impl(...arguments);
@@ -119,10 +117,17 @@ GraphNode.Impl = class {
  */
 GraphNode.rdfFetch = function(uri, options, login) {
     function plainFetch(uri, init = {}) {
+        if (!init.headers) {
+            init.headers = new Headers();
+        }
+        if (!init.headers.get("Accept")) {
+            init.headers.set("Accept", "text/turtle;q=1, application/n-triples;q=.9, "+
+                "application/rdf+xml;q=.8, application/ld+json;q=.7, */*;q=.1");
+        }
         return fetch(uri, init).then(response => {
             if (response.ok) {
                 let graph = $rdf.graph();
-                let mediaType = response.headers.get("Content-type");
+                let mediaType = response.headers.get("Content-type").split(";")[0];
                 return response.text().then(text => {
                     $rdf.parse(text, graph, uri, mediaType);
                     response.graph = graph;
@@ -142,7 +147,7 @@ GraphNode.rdfFetch = function(uri, options, login) {
                 if (login && (response.status === 401)) {
                     console.log("Got 401 response, attempting to login");
                     return login().then(function () {
-                        return ggg.rdfFetch(uri);
+                        return ggg.rdfFetch(uri, options);
                     });
                 } else {
                     reject(response);

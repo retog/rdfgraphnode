@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -13,13 +13,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 
  * @type type
  */
-if (typeof $rdf === 'undefined') {
+if (typeof require !== "undefined") {
     var $rdf = require("rdflib");
-}
-
-if (typeof fetch === 'undefined') {
     var fetch = require("node-fetch");
 }
+var Headers = function (h) {
+    return h ? h : window.Headers;
+}(fetch.Headers);
 
 function GraphNode() {
     return new (Function.prototype.bind.apply(GraphNode.Impl, [null].concat(Array.prototype.slice.call(arguments))))();
@@ -42,7 +42,7 @@ GraphNode.Impl = function () {
     }
 
     _createClass(_class, [{
-        key: 'fetch',
+        key: "fetch",
         value: function fetch() {
             var _this = this;
 
@@ -64,7 +64,7 @@ GraphNode.Impl = function () {
          */
 
     }, {
-        key: 'each',
+        key: "each",
         value: function each(f) {
             var _this2 = this;
 
@@ -74,7 +74,7 @@ GraphNode.Impl = function () {
             return Promise.all(results);
         }
     }, {
-        key: 'fetchEach',
+        key: "fetchEach",
         value: function fetchEach(f) {
             var _this3 = this;
 
@@ -89,7 +89,7 @@ GraphNode.Impl = function () {
          */
 
     }, {
-        key: 'split',
+        key: "split",
         value: function split() {
             var _this4 = this;
 
@@ -98,7 +98,7 @@ GraphNode.Impl = function () {
             });
         }
     }, {
-        key: 'out',
+        key: "out",
         value: function out(predicate) {
             var nodes = this.graph.each(this.node, predicate);
             /*if (nodes.length === 0) {
@@ -107,7 +107,7 @@ GraphNode.Impl = function () {
             return GraphNode(nodes, this.graph, this.sources);
         }
     }, {
-        key: 'in',
+        key: "in",
         value: function _in(predicate) {
             var statements = this.graph.statementsMatching(undefined, predicate, this.node);
             /*if (statements.length === 0) {
@@ -118,7 +118,7 @@ GraphNode.Impl = function () {
             }), this.graph, this.sources);
         }
     }, {
-        key: 'graph',
+        key: "graph",
         get: function get() {
             if (!this._graph) {
                 throw Error("Operation not possible as no Graph is available, try fetching first");
@@ -126,7 +126,7 @@ GraphNode.Impl = function () {
             return this._graph;
         }
     }, {
-        key: 'node',
+        key: "node",
         get: function get() {
             if (this.nodes.length !== 1) {
                 throw Error("Operation not possible as this GraphNode is underdetermined");
@@ -134,12 +134,12 @@ GraphNode.Impl = function () {
             return this.nodes[0];
         }
     }, {
-        key: 'termType',
+        key: "termType",
         get: function get() {
             return this.node.termType;
         }
     }, {
-        key: 'value',
+        key: "value",
         get: function get() {
             ;
             return this.node.value;
@@ -164,10 +164,16 @@ GraphNode.rdfFetch = function (uri, options, login) {
     function plainFetch(uri) {
         var init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+        if (!init.headers) {
+            init.headers = new Headers();
+        }
+        if (!init.headers.get("Accept")) {
+            init.headers.set("Accept", "text/turtle;q=1, application/n-triples;q=.9, " + "application/rdf+xml;q=.8, application/ld+json;q=.7, */*;q=.1");
+        }
         return fetch(uri, init).then(function (response) {
             if (response.ok) {
                 var graph = $rdf.graph();
-                var mediaType = response.headers.get("Content-type");
+                var mediaType = response.headers.get("Content-type").split(";")[0];
                 return response.text().then(function (text) {
                     $rdf.parse(text, graph, uri, mediaType);
                     response.graph = graph;
@@ -180,16 +186,14 @@ GraphNode.rdfFetch = function (uri, options, login) {
     };
     var ggg = this;
     return new Promise(function (resolve, reject) {
-        var graph = $rdf.graph();
         plainFetch(uri, options).then(function (response) {
             if (response.status < 300) {
-                response.graph = graph;
                 resolve(response);
             } else {
                 if (login && response.status === 401) {
                     console.log("Got 401 response, attempting to login");
                     return login().then(function () {
-                        return ggg.rdfFetch(uri);
+                        return ggg.rdfFetch(uri, options);
                     });
                 } else {
                     reject(response);

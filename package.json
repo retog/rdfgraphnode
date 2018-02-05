@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^1.7.3",
-    "rdflib": "../rdflib.js"
+    "rdflib": "^0.16.5"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha",

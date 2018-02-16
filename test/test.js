@@ -1,5 +1,5 @@
 var assert = require('assert');
-var GraphNode = require('../js/main.js');
+var GraphNode = require('../js/GraphNode.js');
 var rdf = require('rdflib');
 
 function dc(suffix) {

@@ -140,21 +140,19 @@ GraphNode.rdfFetch = function(uri, options, login) {
         });
     };
     var ggg = this;
-    return new Promise(function (resolve, reject) {
-        plainFetch(uri, options).then(function (response) {
-            if (response.status < 300) {
-                resolve(response);
+    return plainFetch(uri, options).then(function (response) {
+        if (response.status < 300) {
+            return response;
+        } else {
+            if (login && response.status === 401) {
+                console.log("Got 401 response, attempting to login");
+                return login().then(function () {
+                    return ggg.rdfFetch(uri, options);
+                });
             } else {
-                if (login && (response.status === 401)) {
-                    console.log("Got 401 response, attempting to login");
-                    return login().then(function () {
-                        return ggg.rdfFetch(uri, options);
-                    });
-                } else {
-                    reject(response);
-                }
+                return response;
             }
-        });
+        }
     });
 };
 

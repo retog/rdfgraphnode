@@ -130,7 +130,13 @@ GraphNode.rdfFetch = function(uri, options, login) {
                     let graph = $rdf.graph();
                     let mediaType = response.headers.get("Content-type").split(";")[0];
                     return response.text().then(text => {
-                        $rdf.parse(text, graph, uri, mediaType, () => resolve(graph));
+                        $rdf.parse(text, graph, uri, mediaType, (error, graph) => {
+                            if (error) {
+                                reject(error);
+                            } else {
+                                resolve(graph);
+                            }
+                        });
                     });
                 });
                 return response;

@@ -179,8 +179,12 @@ GraphNode.rdfFetch = function (uri, options, login) {
                         var graph = $rdf.graph();
                         var mediaType = response.headers.get("Content-type").split(";")[0];
                         return response.text().then(function (text) {
-                            $rdf.parse(text, graph, uri, mediaType, function () {
-                                return resolve(graph);
+                            $rdf.parse(text, graph, uri, mediaType, function (error, graph) {
+                                if (error) {
+                                    reject(error);
+                                } else {
+                                    resolve(graph);
+                                }
                             });
                         });
                     });

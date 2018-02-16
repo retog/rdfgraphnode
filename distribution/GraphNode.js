@@ -52,7 +52,9 @@ GraphNode.Impl = function () {
                 //TODO extend existing graph?
                 var uri = this.value.split("#")[0];
                 return GraphNode.rdfFetch(uri).then(function (response) {
-                    return GraphNode(_this.node, response.graph, [uri]);
+                    return response.graph();
+                }).then(function (graph) {
+                    return GraphNode(_this.node, graph, [uri]);
                 });
             }
         }
@@ -172,13 +174,18 @@ GraphNode.rdfFetch = function (uri, options, login) {
         }
         return fetch(uri, init).then(function (response) {
             if (response.ok) {
-                var graph = $rdf.graph();
-                var mediaType = response.headers.get("Content-type").split(";")[0];
-                return response.text().then(function (text) {
-                    $rdf.parse(text, graph, uri, mediaType);
-                    response.graph = graph;
-                    return response;
-                });
+                response.graph = function () {
+                    return new Promise(function (resolve, reject) {
+                        var graph = $rdf.graph();
+                        var mediaType = response.headers.get("Content-type").split(";")[0];
+                        return response.text().then(function (text) {
+                            $rdf.parse(text, graph, uri, mediaType, function () {
+                                return resolve(graph);
+                            });
+                        });
+                    });
+                };
+                return response;
             } else {
                 return response;
             }

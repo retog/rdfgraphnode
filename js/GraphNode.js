@@ -61,7 +61,7 @@ GraphNode.Impl = class {
             } else {
                 //TODO extend existing graph?
                 var uri = this.value.split("#")[0];
-                return GraphNode.rdfFetch(uri).then(response => GraphNode(this.node, response.graph, [uri]));
+                return GraphNode.rdfFetch(uri).then(response => response.graph()).then(graph => GraphNode(this.node, graph, [uri]));
             }
         }
         
@@ -126,13 +126,14 @@ GraphNode.rdfFetch = function(uri, options, login) {
         }
         return fetch(uri, init).then(response => {
             if (response.ok) {
-                let graph = $rdf.graph();
-                let mediaType = response.headers.get("Content-type").split(";")[0];
-                return response.text().then(text => {
-                    $rdf.parse(text, graph, uri, mediaType);
-                    response.graph = graph;
-                    return response;
+                response.graph = () => new Promise((resolve, reject) => {
+                    let graph = $rdf.graph();
+                    let mediaType = response.headers.get("Content-type").split(";")[0];
+                    return response.text().then(text => {
+                        $rdf.parse(text, graph, uri, mediaType, () => resolve(graph));
+                    });
                 });
+                return response;
             } else {
                 return response;
             }

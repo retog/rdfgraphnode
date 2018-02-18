@@ -47,6 +47,14 @@ describe('GraphNode', function () {
                     assert.equal("Another example", title);
                 }).then(done);
         });
+        it('Fetching RDFa', function (done) {
+            let gn = GraphNode(rdf.sym("http://localhost:"+app.get('port')+"/example.html"));
+            gn.fetch().then(gn => 
+                {
+                    let title = gn.out(dc("title")).value;
+                    assert.equal("Another example", title);
+                }).then(done);
+        });
         /* Depends on support in rdflib.js such as by https://github.com/linkeddata/rdflib.js/pull/220
         it('Fetching n-triples', function (done) {
             let gn = GraphNode(rdf.sym("http://localhost:"+app.get('port')+"/example.nt"));

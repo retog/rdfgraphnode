@@ -1,3 +1,6 @@
+var $rdf = require("rdflib");
+var fetch = require("node-fetch");
+
 /**
  * Node Status:
  * 
@@ -7,10 +10,7 @@
  * 
  * @type type
  */
-if (typeof require !== "undefined") {
-    var $rdf = require("rdflib");
-    var fetch = require("node-fetch");
-}
+
 let Headers = ((h) => h ? h : window.Headers)(fetch.Headers);
 
 function GraphNode() {
@@ -130,6 +130,16 @@ GraphNode.rdfFetch = function(uri, options, login) {
                     let graph = $rdf.graph();
                     let mediaType = response.headers.get("Content-type").split(";")[0];
                     return response.text().then(text => {
+                        if ((mediaType === "text/html") && (typeof DOMParser !== 'undefined')) {
+                            console.log("Working around rdflib problem parsing RDFa in browser");
+                            //let opts = {baseURI: uri};
+                            //let parser = new DOMParser();
+                            //let doc = parser.parseFromString(text, "text/html");
+                            //let doc = new JSDOM(text);
+                            //let doc = DOMParser.parse(text);
+                            //let graph = getRdfaGraph(doc, opts);
+                            //console.log(graph.toString());
+                        }
                         $rdf.parse(text, graph, uri, mediaType, (error, graph) => {
                             if (error) {
                                 reject(error);
@@ -162,6 +172,4 @@ GraphNode.rdfFetch = function(uri, options, login) {
     });
 };
 
-if (typeof module !== 'undefined') {
-    module.exports = GraphNode;
-}
+module.exports = GraphNode;

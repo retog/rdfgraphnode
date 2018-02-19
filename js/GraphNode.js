@@ -1,5 +1,6 @@
 var $rdf = require("rdflib");
 var fetch = require("node-fetch");
+var RDFaProcessor = require("./rdfa-processor-dirty-hack");
 
 /**
  * Node Status:
@@ -130,23 +131,24 @@ GraphNode.rdfFetch = function(uri, options, login) {
                     let graph = $rdf.graph();
                     let mediaType = response.headers.get("Content-type").split(";")[0];
                     return response.text().then(text => {
-                        if ((mediaType === "text/html") && (typeof DOMParser !== 'undefined')) {
+                        if ((mediaType === "text/html")  && (typeof DOMParser !== 'undefined')) {
                             console.log("Working around rdflib problem parsing RDFa in browser");
-                            //let opts = {baseURI: uri};
-                            //let parser = new DOMParser();
-                            //let doc = parser.parseFromString(text, "text/html");
-                            //let doc = new JSDOM(text);
-                            //let doc = DOMParser.parse(text);
-                            //let graph = getRdfaGraph(doc, opts);
-                            //console.log(graph.toString());
-                        }
-                        $rdf.parse(text, graph, uri, mediaType, (error, graph) => {
-                            if (error) {
+                            try {
+                                RDFaProcessor.parseRDFaDOM($rdf.Util.parseXML(text, { contentType: mediaType }), graph, uri);
+                            } catch(error) {
                                 reject(error);
-                            } else {
-                                resolve(graph);
+                                return;
                             }
-                        });
+                            resolve(graph);
+                        } else {
+                            $rdf.parse(text, graph, uri, mediaType, (error, graph) => {
+                                if (error) {
+                                    reject(error);
+                                } else {
+                                    resolve(graph);
+                                }
+                            });
+                        }
                     });
                 });
                 return response;

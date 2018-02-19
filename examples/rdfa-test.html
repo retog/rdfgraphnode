@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Traversal API for the Giant Global Graph">
+    <meta name="author" content="Reto Gmür"> 
+    <title>GraphNodeJS</title>
+    
+</head>
+
+<body>
+    <h1>GraphNodeJS</h1>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://solid.github.io/releases/rdflib.js/rdflib-0.16.5.min.js"></script>
+    <!-- <script src="libs/rdflib.min.js"></script> -->
+    <script src="GraphNode.js"></script>
+    <script id="script">
+        $(function () {
+            GraphNode.rdfFetch("http://localhost:8080/example-data.html").then(r => r.graph()).then(g => alert(g.toNT()));
+        });
+    </script>
+</body>
+</html>

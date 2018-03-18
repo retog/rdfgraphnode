@@ -1,6 +1,6 @@
 var assert = require('assert');
 var GraphNode = require('../js/GraphNode.js');
-var rdf = require('ext-rdflib');
+var rdf = require('rdflib');
 
 function dc(suffix) {
     return rdf.sym("http://dublincore.org/2012/06/14/dcelements#" + suffix);
